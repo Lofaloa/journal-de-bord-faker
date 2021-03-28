@@ -18,7 +18,7 @@ def make_location(id, name, latitude, longitude, driver):
 def random_lname_size(min, max):
     return random.randint(min, max)
 
-def random_location_name(faker, excluded = []):
+def random_location_name(fake, excluded = []):
     name = fake.city()
     while name in excluded:
         name = fake.city()
@@ -33,12 +33,12 @@ def write_location(file, location):
     )
     write_insert(file, LOCATION_TABLE, LOCATION_TABLE_COLUMNS, values)
 
-def write_locations(file, driver, count = 10):
+def write_locations(file, driver, location_sequence = 0, count = 10):
     names = []
     fake = Faker()
     Faker.seed(0)
-    for id in range(0, count):
-        name = fake.city()
+    for id in range(location_sequence, count):
+        name = random_location_name(fake, names)
         write_location(file, make_location(id, name, fake.latitude(), fake.longitude(), driver))
         names.append(name)
     write_sequence(file, LOCATION_SEQUENCE, count)
