@@ -1,40 +1,30 @@
 #!/usr/bin/env python3
 
 import sys
+import json
 
-from helpers import make_random_string, make_moment, write_insert
-from tables.locations import make_location, write_location, write_locations
-from tables.rides import make_ride, write_ride, write_rides, Configuration
+from properties import read_properties, PropertyError
+from tables.drivers import write_statements
 
-# Table names
-DRIVER_TABLE = "driver"
+DEFAULT_PROPERTIES_FILE = "properties.json"
 
-def write_driver(file, identifier):
-    write_insert(file, "driver", "identifier, objective", f"'{identifier}', 1000")
+def file_name_specified():
+    return len(sys.argv) == 2
 
 def main():
-
-    if len(sys.argv) == 3:
-        file_name = sys.argv[1]
-        driver_identifier = sys.argv[2]
-
-        print(f"About to open the '{file_name}' file and write the script...\n")
-        file = open(file_name, "w+");
-        
-        print(f"Writing driver with id {driver_identifier}.")
-        write_driver(file, driver_identifier)
-
-        locations_count = 300
-        write_locations(file, driver_identifier, locations_count)
-
-        config = Configuration()
-        config.sample_size = 100
-
-        write_rides(file, driver_identifier, list(range(0, locations_count)), config)
-
-        file.close()
-    else:
-        print(f"Usage: {sys.argv[0]} <file name> <driver identifier>")
+    try:
+        properties_file_name = sys.argv[1] if file_name_specified() else DEFAULT_PROPERTIES_FILE
+        properties = read_properties(properties_file_name)
+        with open(properties["output"], "w+") as sql_script:
+            for driver in properties["drivers"]:
+                print((f"About to write {driver['rides']} rides and "
+                       f"{driver['locations']} locations for driver"
+                       f" with id \"{driver['identifier']}\"."))
+                write_statements(sql_script, driver)
+                print("Done!")
+            print(f"SQL statements written to \"{properties['output']}\".")
+    except PropertyError as e:
+        print(f"Failed to read properties: {str(e)}")
 
 if __name__ == "__main__":
     main()
