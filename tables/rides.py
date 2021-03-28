@@ -58,7 +58,7 @@ def write_rides(file, driver, locations, config = Configuration()):
     current_moment = fake.date_time_between(start_date="-1y", end_date="now")
     odometer = random.randrange(config.min_odometer_start, config.max_odometer_start)
 
-    for i in range(config.ride_id_sequence, config.sample_size, config.ride_id_step):
+    for i in range(config.ride_id_sequence, config.ride_id_sequence + config.sample_size, config.ride_id_step):
         moment = make_moment(current_moment)
         location = random.choice(locations)
 

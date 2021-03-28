@@ -37,7 +37,7 @@ def write_locations(file, driver, location_sequence = 0, count = 10):
     names = []
     fake = Faker()
     Faker.seed(0)
-    for id in range(location_sequence, count):
+    for id in range(location_sequence, location_sequence + count):
         name = random_location_name(fake, names)
         write_location(file, make_location(id, name, fake.latitude(), fake.longitude(), driver))
         names.append(name)
