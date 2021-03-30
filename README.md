@@ -13,6 +13,7 @@ The script uses the [joke2k/faker](https://github.com/joke2k/faker) library. You
     - `locations`: This is the number of random locations to generate.
     - `rides`: This is the number of random rides to generate.
 - `output`: This is the path to the generated script.
+- `syntax` (optional): This specifies the database syntax to use. This matters for the stop table statements. The moment field has a different syntax using H2 or PostgreSQL. It accepts two values: `h2` or `postgresql`. 
 
 ### Example
 

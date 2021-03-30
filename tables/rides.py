@@ -50,6 +50,7 @@ class Configuration:
     max_ride_distance = 200
     max_comment_size = 255
     traffic_condition_values = 5
+    syntax = "h2"
 
 def write_rides(file, driver, locations, config = Configuration()):
     fake = Faker()
@@ -57,22 +58,24 @@ def write_rides(file, driver, locations, config = Configuration()):
     stop_id = config.stop_id_sequence
     current_moment = fake.date_time_between(start_date="-1y", end_date="now")
     odometer = random.randrange(config.min_odometer_start, config.max_odometer_start)
+    is_h2_syntax = config.syntax == "h2"
 
     for i in range(config.ride_id_sequence, config.ride_id_sequence + config.sample_size, config.ride_id_step):
         moment = make_moment(current_moment)
         location = random.choice(locations)
 
         departure = stop_id
-        write_stop(file, make_stop(stop_id, moment, odometer, location, driver))
+        write_stop(file, make_stop(stop_id, moment, odometer, location, driver, is_h2_syntax))
 
         ride_duration = random_ride_duration()
         current_moment = current_moment + ride_duration
         moment = make_moment(current_moment)
         odometer += random.randrange(config.min_ride_distance, config.max_ride_distance)
         stop_id += config.stop_id_step
+        location = random.choice(locations)
 
         arrival = stop_id
-        write_stop(file, make_stop(stop_id, moment, odometer, location, driver))
+        write_stop(file, make_stop(stop_id, moment, odometer, location, driver, is_h2_syntax))
 
         traffic = random.randrange(config.traffic_condition_values)
         comment = fake.text(max_nb_chars=config.max_comment_size)
