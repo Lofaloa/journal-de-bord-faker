@@ -56,7 +56,7 @@ def write_rides(file, driver, locations, config = Configuration()):
     fake = Faker()
     Faker.seed(0)
     stop_id = config.stop_id_sequence
-    current_moment = fake.date_time_between(start_date="-1y", end_date="now")
+    current_moment = fake.date_time_between(start_date="-5y", end_date="-1y")
     odometer = random.randrange(config.min_odometer_start, config.max_odometer_start)
     is_h2_syntax = config.syntax == "h2"
 
